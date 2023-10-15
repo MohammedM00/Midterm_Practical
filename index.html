@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Collection</title>
+</head>
+<body>
+  <h1>My Book Collection</h1>
+
+  <div>
+    <label for="title">Title:</label>
+    <input type="text" id="title">
+  </div>
+
+  <div>
+    <label for="author">Author:</label>
+    <input type="text" id="author">
+  </div>
+
+  <div>
+    <label for="year">Year:</label>
+    <input type="text" id="year">
+  </div>
+
+  <div>
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn">
+  </div>
+
+  <div>
+    <label for="genre">Genre:</label>
+    <input type="text" id="genre">
+  </div>
+
+  <button id="addBook">Add Book</button>
+
+  <h2>Book List:</h2>
+  <ul id="bookList"></ul>
+
+  <h2>Book Details:</h2>
+  <div id="bookDetails"></div>
+
+  <h2>Update Book:</h2>
+  <div id="updateForm">
+    <label for="updateTitle">Title:</label>
+    <input type="text" id="updateTitle">
+    <label for="updateAuthor">Author:</label>
+    <input type="text" id="updateAuthor">
+    <label for="updateYear">Year:</label>
+    <input type="text" id="updateYear">
+    <label for="updateISBN">ISBN:</label>
+    <input type="text" id="updateISBN">
+    <label for="updateGenre">Genre:</label>
+    <input type="text" id="updateGenre">
+    <button id="updateBook">Update</button>
+  </div>
+
+  <script>
+    const titleInput = document.getElementById('title');
+    const authorInput = document.getElementById('author');
+    const yearInput = document.getElementById('year');
+    const isbnInput = document.getElementById('isbn');
+    const genreInput = document.getElementById('genre');
+    const addBookButton = document.getElementById('addBook');
+    const bookList = document.getElementById('bookList');
+    const bookDetails = document.getElementById('bookDetails');
+    const updateForm = document.getElementById('updateForm');
+    const updateTitleInput = document.getElementById('updateTitle');
+    const updateAuthorInput = document.getElementById('updateAuthor');
+    const updateYearInput = document.getElementById('updateYear');
+    const updateISBNInput = document.getElementById('updateISBN');
+    const updateGenreInput = document.getElementById('updateGenre');
+    const updateBookButton = document.getElementById('updateBook');
+    const books = [];
+
+    addBookButton.addEventListener('click', () => {
+      const title = titleInput.value;
+      const author = authorInput.value;
+      const year = yearInput.value;
+      const isbn = isbnInput.value;
+      const genre = genreInput.value;
+
+      if (title && author && year && isbn && genre) {
+        const book = {
+          title: title,
+          author: author,
+          year: year,
+          isbn: isbn,
+          genre: genre
+        };
+
+        books.push(book);
+        updateBookList();
+        
+        // Clear input fields
+        titleInput.value = '';
+        authorInput.value = '';
+        yearInput.value = '';
+        isbnInput.value = '';
+        genreInput.value = '';
+      } else {
+        alert('Please fill out all fields');
+      }
+    });
+
+    function updateBookList() {
+      bookList.innerHTML = '';
+      for (let i = 0; i < books.length; i++) {
+        const book = books[i];
+        const listItem = document.createElement('li');
+        listItem.textContent = `${book.title} by ${book.author}, Year: ${book.year}, ISBN: ${book.isbn}, Genre: ${book.genre}`;
+
+        // Create "Read," "Update," and "Delete" buttons for each book
+        const readButton = document.createElement('button');
+        readButton.textContent = 'Read';
+        readButton.addEventListener('click', () => {
+          displayBookDetails(book);
+        });
+
+        const updateButton = document.createElement('button');
+        updateButton.textContent = 'Update';
+        updateButton.addEventListener('click', () => {
+          updateForm.style.display = 'block';
+          populateUpdateForm(book, i);
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+          deleteBook(i);
+        });
+
+        listItem.appendChild(readButton);
+        listItem.appendChild(updateButton);
+        listItem.appendChild(deleteButton);
+        bookList.appendChild(listItem);
+      }
+    }
+
+    function displayBookDetails(book) {
+      bookDetails.innerHTML = `Title: ${book.title}<br>Author: ${book.author}<br>Year: ${book.year}<br>ISBN: ${book.isbn}<br>Genre: ${book.genre}`;
+    }
+
+    function populateUpdateForm(book, index) {
+      updateTitleInput.value = book.title;
+      updateAuthorInput.value = book.author;
+      updateYearInput.value = book.year;
+      updateISBNInput.value = book.isbn;
+      updateGenreInput.value = book.genre;
+
+      updateBookButton.addEventListener('click', () => {
+        book.title = updateTitleInput.value;
+        book.author = updateAuthorInput.value;
+        book.year = updateYearInput.value;
+        book.isbn = updateISBNInput.value;
+        book.genre = updateGenreInput.value;
+        updateBookList();
+        updateForm.style.display = 'none';
+      });
+    }
+
+    function deleteBook(index) {
+      if (index >= 0 && index < books.length) {
+        books.splice(index, 1);
+        updateBookList();
+      }
+    }
+  </script>
+</body>
+</html>
